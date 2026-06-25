@@ -1,35 +1,74 @@
 # Deployment Guide
 
-## Current public URL (Cloudflare Tunnel — active while laptop is on)
-https://lamb-contents-stationery-cache.trycloudflare.com
+## Self-hosted — Docker Compose
 
-To restart tunnel after reboot:
+### Prerequisites on your server
 ```bash
-cloudflared tunnel --url http://localhost:8000
+# Install Docker + Docker Compose (Ubuntu/Debian)
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER   # then re-login
 ```
+
+### First deploy
+```bash
+# On your server — clone the repo
+git clone https://github.com/jawahirps/autoapply-ae.git
+cd autoapply-ae
+
+# Build and start (runs on port 80)
+docker compose up -d --build
+```
+
+App is now live at `http://<your-server-ip>`.
+
+### Update after a code change
+```bash
+git pull
+docker compose up -d --build
+```
+
+### View logs
+```bash
+docker compose logs -f
+```
+
+### Stop
+```bash
+docker compose down
+```
+
+### Data persistence
+Resume uploads and the SQLite database are stored in a Docker volume (`app_data`).
+They survive container restarts and rebuilds.
 
 ---
 
-## Permanent deployment — Railway
+## HTTPS (optional but recommended)
 
-### One-time setup
-1. `railway login`          # opens browser auth
-2. `railway init`           # creates new Railway project
-3. `railway up`             # builds Docker image and deploys
-4. `railway domain`         # assigns a permanent *.railway.app URL
+Install Caddy on your server for automatic HTTPS:
 
-### Re-deploy after changes
 ```bash
-git add -A && git commit -m "update"
-railway up
+sudo apt install -y caddy
 ```
 
-### Environment variables to set in Railway dashboard
-| Variable | Value |
-|---|---|
-| `RAILWAY_ENVIRONMENT` | `production` |
-| `PORT` | `8000` (set automatically) |
-| `DATA_DIR` | `/app/data` |
-| `UPLOAD_DIR` | `/app/uploads` |
+Edit `/etc/caddy/Caddyfile`:
+```
+yourdomain.com {
+    reverse_proxy localhost:80
+}
+```
 
-> Note: For persistent file storage on Railway, add a Volume mounted at `/app/data`.
+```bash
+sudo systemctl reload caddy
+```
+
+Caddy auto-issues a Let's Encrypt certificate.
+
+---
+
+## Quick public URL (dev / testing only)
+
+Expose your local dev server instantly via Cloudflare Tunnel:
+```bash
+cloudflared tunnel --url http://localhost:5173
+```
