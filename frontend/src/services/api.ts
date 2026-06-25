@@ -45,3 +45,19 @@ export const updateApplicationStatus = (id: number, status: string, notes?: stri
 export const deleteApplication = (id: number) => api.delete(`/applications/${id}`)
 export const getApplicationStats = () =>
   api.get<Record<string, number>>('/applications/stats/summary')
+
+// Journal
+export interface JournalEntry {
+  id: number
+  application_id: number
+  entry_type: string
+  title: string
+  body: string
+  created_at: string
+}
+export const listJournalEntries = (appId: number) =>
+  api.get<JournalEntry[]>(`/journal/${appId}`)
+export const addJournalEntry = (appId: number, entry_type: string, title: string, body: string) =>
+  api.post<JournalEntry>(`/journal/${appId}`, { entry_type, title, body })
+export const deleteJournalEntry = (entryId: number) =>
+  api.delete(`/journal/entry/${entryId}`)

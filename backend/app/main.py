@@ -6,7 +6,7 @@ from fastapi.responses import FileResponse
 from pathlib import Path
 from app.database import engine
 from app import models
-from app.routers import resume, jobs, applications
+from app.routers import resume, jobs, applications, journal
 from app.config import UPLOAD_PATH
 
 models.Base.metadata.create_all(bind=engine)
@@ -31,6 +31,7 @@ app.add_middleware(
 app.include_router(resume.router)
 app.include_router(jobs.router)
 app.include_router(applications.router)
+app.include_router(journal.router)
 
 
 @app.get("/api/health")
