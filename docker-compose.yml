@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "80:8000"
+    environment:
+      - PORT=8000
+      - DATA_DIR=/data
+      - UPLOAD_DIR=/data/uploads
+    volumes:
+      - app_data:/data
+
+volumes:
+  app_data:

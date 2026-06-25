@@ -18,8 +18,8 @@ export default function Sidebar() {
         <div className="flex items-center gap-2">
           <span className="text-2xl">🇦🇪</span>
           <div>
-            <p className="font-bold text-white text-sm leading-tight">UAE Jobs</p>
-            <p className="text-xs text-gray-400">Auto-Applicator</p>
+            <p className="font-bold text-white text-sm leading-tight">AutoApply AE</p>
+            <p className="text-xs text-gray-400">UAE Job Portal</p>
           </div>
         </div>
       </div>

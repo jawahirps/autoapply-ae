@@ -42,6 +42,15 @@ class Job(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class JournalEntry(Base):
+    __tablename__ = "journal_entries"
+    id = Column(Integer, primary_key=True, index=True)
+    application_id = Column(Integer, index=True)
+    entry_type = Column(String(50), default="note")  # note, follow_up, interview, offer, rejection, call, email
+    title = Column(String(255))
+    body = Column(Text)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 class Application(Base):
     __tablename__ = "applications"
     id = Column(Integer, primary_key=True, index=True)
