@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   listApplications, updateApplicationStatus, deleteApplication,
@@ -31,6 +31,39 @@ const ENTRY_TYPE_STYLES: Record<string, string> = {
 }
 
 const ENTRY_TYPES = ['note', 'follow_up', 'interview', 'offer', 'rejection', 'call', 'email']
+
+// ── Confirm button ───────────────────────────────────────────
+function ConfirmButton({ onConfirm, children, className }: {
+  onConfirm: () => void
+  children: React.ReactNode
+  className?: string
+}) {
+  const [pending, setPending] = useState(false)
+  if (pending) {
+    return (
+      <span className="flex items-center gap-1">
+        <button
+          onClick={() => { onConfirm(); setPending(false) }}
+          className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors"
+        >
+          Confirm
+        </button>
+        <span className="text-gray-700">/</span>
+        <button
+          onClick={() => setPending(false)}
+          className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+        >
+          Cancel
+        </button>
+      </span>
+    )
+  }
+  return (
+    <button onClick={() => setPending(true)} className={className}>
+      {children}
+    </button>
+  )
+}
 
 // ── Journal panel ────────────────────────────────────────────
 function JournalPanel({ app }: { app: Application }) {
@@ -79,12 +112,12 @@ function JournalPanel({ app }: { app: Application }) {
                   {new Date(e.created_at).toLocaleString('en-AE', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
-              <button
-                onClick={() => del.mutate(e.id)}
+              <ConfirmButton
+                onConfirm={() => del.mutate(e.id)}
                 className="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-400 transition-all p-0.5 shrink-0"
               >
                 <X size={13} />
-              </button>
+              </ConfirmButton>
             </div>
           </div>
         ))}
@@ -206,9 +239,12 @@ function ApplicationRow({ app, onUpdate, onDelete }: {
               <ExternalLink size={14} />
             </a>
           )}
-          <button onClick={() => onDelete(app.id)} className="p-1.5 text-gray-600 hover:text-red-400 transition-colors">
+          <ConfirmButton
+            onConfirm={() => onDelete(app.id)}
+            className="p-1.5 text-gray-600 hover:text-red-400 transition-colors"
+          >
             <Trash2 size={14} />
-          </button>
+          </ConfirmButton>
         </div>
       </div>
 
