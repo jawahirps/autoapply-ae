@@ -12,7 +12,7 @@ from app.config import UPLOAD_PATH
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="UAE Job Applicator Portal",
+    title="AutoApply AE",
     description="Automatically search and apply to jobs across UAE job boards",
     version="1.0.0",
 )
