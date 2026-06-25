@@ -3,18 +3,19 @@
   "configurations": [
     {
       "name": "Frontend (Vite)",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "/opt/homebrew/bin/npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": "frontend",
+      "cwd": "/Users/jawaa/Job Applicator/frontend",
       "port": 5173,
       "autoPort": false
     },
     {
       "name": "Backend (FastAPI)",
-      "runtimeExecutable": "uvicorn",
-      "runtimeArgs": ["app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"],
+      "runtimeExecutable": "/Users/jawaa/Job Applicator/backend/.venv/bin/python",
+      "runtimeArgs": ["-m", "uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"],
       "cwd": "backend",
-      "port": 8000
+      "port": 8000,
+      "autoPort": false
     }
   ]
 }
