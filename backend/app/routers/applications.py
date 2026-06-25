@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional, List
 from app.database import get_db
-from app.models import Application, Job, Resume
+from app.models import Application, Job, Resume, JournalEntry
 from app.apply.email_apply import generate_cover_letter, extract_email_from_description
 
 router = APIRouter(prefix="/api/applications", tags=["applications"])
@@ -159,6 +159,7 @@ def delete_application(app_id: int, db: Session = Depends(get_db)):
     app = db.query(Application).filter(Application.id == app_id).first()
     if not app:
         raise HTTPException(404, "Application not found")
+    db.query(JournalEntry).filter(JournalEntry.application_id == app_id).delete()
     db.delete(app)
     db.commit()
     return {"message": "Deleted"}
